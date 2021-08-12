@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.ActivityDao">
+    <sql id="query_all">
+        select a.id,a.name,a.sponsor,a.brief,a.status,a.invitationcode,
+               a.userid,a.maxjudge,a.begintime, a.endtime, a.createtime, a.updatetime
+                   from activity as a
+    </sql>
+
+    <select id="findAll" resultType="com.laoluoli.java.activitygrade.domain.Activity">
+        <include refid="query_all"></include>
+    </select>
+
+    <select id="findByCode" resultType="com.laoluoli.java.activitygrade.domain.Activity" parameterType="java.lang.String">
+        <include refid="query_all"></include>
+            <where>
+                <choose>
+                    <when test="code != null">
+                        AND a.invitationcode=#{code}
+                    </when>
+                    <otherwise>
+                        AND 0=1
+                    </otherwise>
+                </choose>
+            </where>
+    </select>
+
+    <select id="findById" resultType="com.laoluoli.java.activitygrade.domain.Activity" parameterType="java.lang.Integer">
+        <include refid="query_all"></include>
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <choose>
+                <when test="id!=null">
+                    AND a.id = #{id}
+                </when>
+                <otherwise>
+                    AND 0=1
+                </otherwise>
+            </choose>
+        </trim>
+    </select>
+
+    <insert id="save"  parameterType="com.laoluoli.java.activitygrade.domain.Activity">
+        insert into activity (name,sponsor,brief,status,invitationcode,userid,begintime,maxjudge)
+            values(#{name},#{sponsor},#{brief},#{status},#{invitationcode},#{userid},#{begintime},#{maxjudge})
+    </insert>
+
+    <update id="update"  parameterType="com.laoluoli.java.activitygrade.domain.Activity">
+        update activity
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="sponsor!=null">
+                sponsor=#{sponsor},
+            </if>
+            <if test="brief!=null">
+                brief=#{brief},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="invitationcode!=null">
+                invitationcode=#{invitationcode},
+            </if>
+            <if test="userid!=null">
+                userid=#{userid},
+            </if>
+            <if test="begintime!=null">
+                begintime=#{begintime},
+            </if>
+        </set>
+        <where>
+            <choose>
+                <when test="id!=null">
+                    id=#{id}
+                </when>
+                <otherwise>
+                    0=1
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+
+    <select id="findActivityByUserid" parameterType="java.lang.Integer" resultType="com.laoluoli.java.activitygrade.domain.Activity">
+        <include refid="query_all"></include>
+        <where>
+            <choose>
+                <when test="userid !=null">
+                    userid=#{userid}
+                </when>
+                <otherwise>
+                    0=1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <update id="updateWithEndtime" parameterType="com.laoluoli.java.activitygrade.domain.Activity" >
+        update activity set endtime=#{endtime} , begintime=#{begintime}
+        <where>
+            <choose>
+                <when test="id!=null">
+                    id=#{id}
+                </when>
+                <otherwise>
+                    0=1
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+</mapper>
