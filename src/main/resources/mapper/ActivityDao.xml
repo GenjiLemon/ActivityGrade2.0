@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.laoluoli.java.activitygrade.dao.ActivityDao">
+    <cache eviction="LRU" flushInterval="100000" readOnly="true" size="1024"></cache>
     <sql id="query_all">
         select a.id,a.name,a.sponsor,a.brief,a.status,a.invitationcode,
                a.userid,a.maxjudge,a.begintime, a.endtime, a.createtime, a.updatetime

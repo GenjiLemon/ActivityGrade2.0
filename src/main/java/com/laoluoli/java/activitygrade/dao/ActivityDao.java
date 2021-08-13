@@ -15,14 +15,14 @@ public interface ActivityDao {
      * @param code 邀请码
      * @return
      */
-    Activity findByCode(String code);
+    Activity findByCode(@Param("code") String code);
 
     /**
      * 根据ID获取活动
      * @param id 活动id
      * @return
      */
-    Activity findById(Integer id);
+    Activity findById(@Param("id") Integer id);
 
     /**
      * 新增一个活动
@@ -43,7 +43,7 @@ public interface ActivityDao {
      * @param userid 用户id
      * @return 活动列表
      */
-    List<Activity> findActivityByUserid(Integer userid);
+    List<Activity> findActivityByUserid(@Param("userid") Integer userid);
 
     /**
      * 结束活动

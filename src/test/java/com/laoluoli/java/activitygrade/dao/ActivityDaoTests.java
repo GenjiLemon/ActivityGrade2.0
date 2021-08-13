@@ -28,7 +28,9 @@ public class ActivityDaoTests {
     @Test
     public void testFindByCode() {
         Activity activity = activityDao.findByCode("34dss");
+        Activity activity1 = activityDao.findByCode("34dss");
         System.out.println(activity);
+        System.out.println(activity1);
     }
 
     @Test
