@@ -8,6 +8,8 @@ import com.laoluoli.java.activitygrade.domain.*;
 import com.laoluoli.java.activitygrade.service.AnalyseService;
 import com.laoluoli.java.activitygrade.service.JudgeService;
 import com.laoluoli.java.activitygrade.utils.CommonUtils;
+import com.laoluoli.java.activitygrade.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import javax.servlet.ServletOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service("analyseService")
 public class AnalyseServiceImpl implements AnalyseService {
 
@@ -29,6 +32,8 @@ public class AnalyseServiceImpl implements AnalyseService {
     private RuleDao ruleDao;
     @Autowired
     private JudgeService judgeService;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Override
     public List<Player> getPlayerOrder(Integer activityid) {
@@ -38,7 +43,16 @@ public class AnalyseServiceImpl implements AnalyseService {
 
     @Override
     public List<Player> getPlayerFairOrder(Integer activityid) {
-        return playerDao.findListByActivityidOrderByFariScore(activityid);
+        String key = "playerFairOrder_"+activityid;
+        if(redisUtils.hashKey(key)){
+            log.info("从缓存中读取选手列表");
+            return (List<Player>)redisUtils.get(key);
+        }
+        else{
+            List<Player> players =  playerDao.findListByActivityidOrderByFariScore(activityid);
+            redisUtils.set(key,players,10);
+            return players;
+        }
     }
 
     //生成选手-评委表
