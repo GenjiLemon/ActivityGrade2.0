@@ -18,6 +18,17 @@
        </where>
     </select>
 
+    <select id="findById" resultType="com.laoluoli.java.activitygrade.domain.Rule">
+        <include refid="query_all" />
+        <where>
+            <choose>
+                <when test="id!=null">
+                    AND id=#{id}
+                </when>
+            </choose>
+        </where>
+    </select>
+
     <insert id="save" parameterType="com.laoluoli.java.activitygrade.domain.Rule">
         insert into rule (name,activityid,fullscore,limitscore) values (#{name},#{activityid},#{fullscore},#{limitscore})
     </insert>

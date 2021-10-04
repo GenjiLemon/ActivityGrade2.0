@@ -5,6 +5,9 @@
     <sql id="query_all">
         select id,activityid,name,projectname,score,fairscore from player
     </sql>
+    <update id="update" parameterType="com.laoluoli.java.activitygrade.domain.Player">
+        update player set activityid=#{activityid},name=#{name},projectname=#{projectname} where id=#{id}
+    </update>
 
     <resultMap id="playerMap" type="com.laoluoli.java.activitygrade.domain.Player">
         <id column="id" property="id" />
@@ -41,7 +44,8 @@
         delete from player where id=#{id}
     </delete>
 
-    <select id="findListByActivityidOrderScore" parameterType="java.lang.Integer">
+    <select id="findListByActivityidOrderScore" parameterType="java.lang.Integer"
+            resultType="com.laoluoli.java.activitygrade.domain.Player">
         <include refid="query_all"></include>
         <where>
             <choose>
@@ -53,7 +57,8 @@
         order by score desc
     </select>
 
-    <select id="findListByActivityidOrderByFariScore" parameterType="java.lang.Integer">
+    <select id="findListByActivityidOrderByFariScore" parameterType="java.lang.Integer"
+            resultType="com.laoluoli.java.activitygrade.domain.Player">
         <include refid="query_all"></include>
         <where>
             <choose>
@@ -63,5 +68,16 @@
             </choose>
         </where>
         order by fairscore desc
+    </select>
+
+    <select id="findById" resultType="com.laoluoli.java.activitygrade.domain.Player" parameterType="java.lang.Integer">
+        <include refid="query_all" />
+        <where>
+            <choose>
+                <when test="id!=null">
+                    AND id=#{id}
+                </when>
+            </choose>
+        </where>
     </select>
 </mapper>
