@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.PlayerDao">
+    <cache eviction="LRU" readOnly="true" size="1024"></cache>
+    <sql id="query_all">
+        select id,activityid,name,projectname,score,fairscore from player
+    </sql>
+
+    <resultMap id="playerMap" type="com.laoluoli.java.activitygrade.domain.Player">
+        <id column="id" property="id" />
+        <result column="activityid" property="activityid" />
+        <result column="name" property="name" />
+        <result column="projectname" property="projectname" />
+        <result column="score" property="score" />
+        <result column="fairscore" property="fairscore" />
+        <association property="grades" column="activityid" 
+                     select="com.laoluoli.java.activitygrade.dao.GradeDao.findListByActivityid" fetchType="lazy"/>
+    </resultMap>
+    
+    <select id="findListByActivityid" resultMap="playerMap" parameterType="java.lang.Integer">
+        <include refid="query_all" />
+        <where>
+            <choose>
+                <when test="activityId!=null">
+                    AND activityid = #{activityId}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.laoluoli.java.activitygrade.domain.Player">
+        update player set activityid=#{activityid},name=#{name},projectname=#{projectname} where id=#{id}
+    </insert>
+
+    <insert id="updateWithScore" parameterType="com.laoluoli.java.activitygrade.domain.Player">
+        update player set activityid=#{activityid},name=#{name},projectname=#{projectname},score=#{score},
+        fairscore=#{fairscore} where id=#{id}
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from player where id=#{id}
+    </delete>
+
+    <select id="findListByActivityidOrderScore" parameterType="java.lang.Integer">
+        <include refid="query_all"></include>
+        <where>
+            <choose>
+                <when test="activityid!=null">
+                    AND activityid=#{activityid}
+                </when>
+            </choose>
+        </where>
+        order by score desc
+    </select>
+
+    <select id="findListByActivityidOrderByFariScore" parameterType="java.lang.Integer">
+        <include refid="query_all"></include>
+        <where>
+            <choose>
+                <when test="activityid!=null">
+                    AND activityid=#{activityid}
+                </when>
+            </choose>
+        </where>
+        order by fairscore desc
+    </select>
+</mapper>

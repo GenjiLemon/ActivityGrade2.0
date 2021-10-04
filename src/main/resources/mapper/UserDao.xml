@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.UserDao">
+    <cache eviction="LRU" readOnly="false" size="1024"></cache>
+    <sql id="query_all">
+        select id,openid,nickname,judgename,avatarurl from user
+    </sql>
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="com.laoluoli.java.activitygrade.domain.User">
+        <include refid="query_all" />
+        <where>
+            <choose>
+                <when test="id!=null">
+                    AND id=#{id};
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.laoluoli.java.activitygrade.domain.User">
+        insert into user (openid,judgename,nickname,avatarurl) values (#{openid},#{judgename},#{nickname},#{avatarurl})
+    </insert>
+
+    <select id="findByOpenid" parameterType="java.lang.String"
+            resultType="com.laoluoli.java.activitygrade.domain.User">
+        <include refid="query_all" />
+        <where>
+            <choose>
+                <when test="openid!=null">
+                    AND openid=#{openid};
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.laoluoli.java.activitygrade.domain.User">
+        update user set openid=#{openid},judgename=#{judgename},nickname=#{nickname},avatarurl=#{avatarurl} where id=#{id}
+    </update>
+</mapper>

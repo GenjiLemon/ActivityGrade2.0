@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.RuleDao">
+    <cache eviction="LRU" readOnly="false" size="1024"></cache>
+    <sql id="query_all">
+        select id,name,activityid,fullscore,limitscore from rule
+    </sql>
+
+    <select id="findListByActivityid" parameterType="java.lang.Integer"
+            resultType="com.laoluoli.java.activitygrade.domain.Rule">
+       <include refid="query_all" />
+       <where>
+           <choose>
+               <when test="activityId!=null">
+                   AND activityid=#{activityId}
+               </when>
+           </choose>
+       </where>
+    </select>
+
+    <insert id="save" parameterType="com.laoluoli.java.activitygrade.domain.Rule">
+        insert into rule (name,activityid,fullscore,limitscore) values (#{name},#{activityid},#{fullscore},#{limitscore})
+    </insert>
+
+    <update id="update" parameterType="com.laoluoli.java.activitygrade.domain.Rule">
+        update rule set name=#{name},activityid=#{activityid},fullscore=#{fullscore},limitscore=#{limitscore} where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from rule where id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.GradeDao">
+        <cache eviction="LRU" readOnly="false" size="1024"></cache>
+        <sql id="query_all">
+                select id,playerid,judgeid,activityid,playerscore,
+                rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8,
+                rule9,rule10
+                 from grade
+        </sql>
+
+        <resultMap type="com.laoluoli.java.activitygrade.domain.Grade" id="gradeMap">
+                <id column="id" property="id"/>
+                <result column="playerid" property="playerid" />
+                <result column="judgeid" property="judgeid" />
+                <result column="activityid" property="activityid" />
+                <result column="playerscore" property="playerscore" />
+                <result column="rule1" property="rule1" />
+                <result column="rule2" property="rule2" />
+                <result column="rule3" property="rule3" />
+                <result column="rule4" property="rule4" />
+                <result column="rule5" property="rule5" />
+                <result column="rule6" property="rule6" />
+                <result column="rule7" property="rule7" />
+                <result column="rule8" property="rule8" />
+                <result column="rule9" property="rule9" />
+                <result column="rule10" property="rule10" />
+                <association property="judge"  column="judgeid" select="com.laoluoli.java.activitygrade.dao.JudgeDao.findById"
+                        javaType="com.laoluoli.java.activitygrade.domain.Judge" fetchType="eager">
+                </association>
+        </resultMap>
+
+        <select id="findListByActivityid" resultMap="gradeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                       <choose>
+                               <when test="activityId!=null">
+                                       AND activityId=#{activityId}
+                               </when>
+                       </choose>
+                </where>
+        </select>
+
+        <select id="findListByPlayerid" resultMap="gradeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="playerid!=null">
+                                        AND playerid=#{playerid}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+        <insert id="save" parameterType="com.laoluoli.java.activitygrade.domain.Grade">
+            insert into grade (playerid,judgeid,activityid,playerscore,
+            rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8,rule9,rule10)
+            values
+            (#{playerid},#{judgeid},#{activityid},#{playerscore},
+            #{rule1},#{rule2},#{rule3},#{rule4},#{rule5},#{rule6},#{rule7},#{rule8},#{rule9},#{rule10})
+        </insert>
+
+        <select id="findById" resultMap="gradeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="id!=null">
+                                        AND id=#{id}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+        <update id="update" parameterType="com.laoluoli.java.activitygrade.domain.Grade">
+            update grade set playerid=#{playerid},judgeid=#{judgeid},activityid=#{activityid},playerscore=#{playerscore},
+            "rule1=#{rule1},rule2=#{rule2},rule3=#{rule3},rule4=#{rule4},rule5=#{rule5},rule6=#{rule6},rule7=#{rule7}"
+            ",rule8=#{rule8},rule9=#{rule9},rule10=#{rule10} where id=#{id}
+        </update>
+
+        <select id="getListByJudgeid" resultMap="gradeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="judgeid!=null">
+                                        AND judgeid=#{judgeid}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+        <select id="findByJidandPid" resultType="com.laoluoli.java.activitygrade.domain.Grade"
+                parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="judgeid!=null">
+                                        AND judgeid=#{judgeid}
+                                </when>
+                                <when test="playerid!=null">
+                                        AND playerid=#{playerid}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+</mapper>

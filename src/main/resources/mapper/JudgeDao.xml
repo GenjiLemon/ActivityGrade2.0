@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.JudgeDao">
+        <cache eviction="LRU" readOnly="true" size="1024"></cache>
+        <sql id="query_all">
+                select id,name,activityid,userid from judge
+        </sql>
+
+        <resultMap id="judgeMap" type="com.laoluoli.java.activitygrade.domain.Judge">
+                <id column="id" property="id" />
+                <result column="name" property="name" />
+                <result column="activityid" property="activityid" />
+                <result column="userid" property="userid" />
+                <association property="activity" column="activityid"
+                             select="com.laoluoli.java.activitygrade.dao.ActivityDao.findById" fetchType="eager" />
+        </resultMap>
+
+        <select id="findListByActivityid" resultMap="judgeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="activityid!=null">
+                                        AND activityid = #{activityid}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+        <select id="findListByUserid" resultMap="judgeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="userid!=null">
+                                        AND userid = #{userid}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+        <update id="save" parameterType="com.laoluoli.java.activitygrade.domain.Judge">
+                insert into judge (name,activityid,userid) values(#{name},#{activityid},#{userid})
+        </update>
+
+        <select id="findById" resultMap="judgeMap" parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="id!=null">
+                                        AND id = #{id}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+        <select id="findByUserandActivity" resultType="com.laoluoli.java.activitygrade.domain.Judge"
+                parameterType="java.lang.Integer">
+                <include refid="query_all"></include>
+                <where>
+                        <choose>
+                                <when test="userid!=userid">
+                                        AND userid = #{userid}
+                                </when>
+                                <when test="activityid!=null">
+                                        AND activityid = #{activityid}
+                                </when>
+                        </choose>
+                </where>
+        </select>
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laoluoli.java.activitygrade.dao.QrcodeDao">
+    <cache eviction="LRU" readOnly="true" size="1024"></cache>
+
+    <select id="findByActivityidType" parameterType="java.lang.Integer"
+            resultType="com.laoluoli.java.activitygrade.domain.Qrcode">
+        select id,activityid,url,type
+        from qrcode
+        <where>
+            <choose>
+                <when test="activityid!=null">
+                    AND activityid=#{activityid}
+                </when>
+            </choose>
+            <choose>
+                <when test="type!=null">
+                    AND type=#{type}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <insert id="Save" parameterType="com.laoluoli.java.activitygrade.domain.Qrcode">
+        insert into qrcode (activityid,url,type)values(#{activityid},#{url},#{type})
+    </insert>
+</mapper>
