@@ -13,20 +13,20 @@ public interface ActivityDao {
     /**
      * 根据邀请码返回对应个体
      * @param code 邀请码
-     * @return
+     * @return 活动实体
      */
     Activity findByCode(@Param("code") String code);
 
     /**
      * 根据ID获取活动
      * @param id 活动id
-     * @return
+     * @return 活动实体
      */
     Activity findById(@Param("id") Integer id);
 
     /**
      * 新增一个活动
-     * @param activity
+     * @param activity 活动实体
      * @return 1成功，0失败
      */
     int save(Activity activity);
