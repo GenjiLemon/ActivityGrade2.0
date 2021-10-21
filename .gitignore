@@ -1,4 +1,4 @@
 .idea/
 src/main/resources/application-dev.properties
 target/
-/activitygrade.iml
+*.iml
