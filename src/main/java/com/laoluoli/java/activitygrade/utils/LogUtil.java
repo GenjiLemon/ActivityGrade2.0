@@ -1,8 +1,10 @@
 package com.laoluoli.java.activitygrade.utils;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -37,13 +39,14 @@ public class LogUtil {
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
 
         // 记录下请求内容
-        logger.info("################URL : " + request.getRequestURL().toString());
-        logger.info("################HTTP_METHOD : " + request.getMethod());
-        logger.info("################IP : " + request.getRemoteAddr());
-        logger.info("################THE ARGS OF THE CONTROLLER : " + Arrays.toString(joinPoint.getArgs()));
-
-        //下面这个getSignature().getDeclaringTypeName()是获取包+类名的   然后后面的joinPoint.getSignature.getName()获取了方法名
-        logger.info("################CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        StringBuilder sb = new StringBuilder();
+        sb.append("URL :").append(request.getRequestURL().toString())
+                .append(" ,HTTP_METHOD : ").append(request.getMethod())
+                .append(",IP : ").append(request.getRemoteAddr())
+                .append(",THE ARGS OF THE CONTROLLER :  ").append(Arrays.toString(joinPoint.getArgs()))
+                .append("CLASS_METHOD : ")
+                .append(joinPoint.getSignature().getDeclaringTypeName()).append(".").append(joinPoint.getSignature());
+        logger.info(sb.toString());
     }
 
 //    /**
